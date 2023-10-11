@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { Route, Routes, Link } from "react-router-dom";
+import AllProducts from "./components/AllProducts";
+import Login from "./components/Login";
+import Cart from "./components/Cart";
+import SingleProduct from "./components/SingleProduct";
+ import "./index.css";
+import "./AllProducts.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [userToken, setUserToken] = useState(null);
+
+  const handleLogout = () => {
+    setUserToken(null);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <h1>Store</h1>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            {userToken ? (
+              <Link to="/" onClick={handleLogout}>
+                Logout
+              </Link>
+            ) : (
+              <Link to="/login">Login</Link>
+            )}
+          </li>
+          <li>
+            <Link to="/cart">Cart</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<AllProducts />} />
+        <Route
+          path="/login"
+          element={<Login userToken={userToken} setUserToken={setUserToken} />}
+        />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/products/:productId" element={<SingleProduct />} />
+      </Routes>
+    </div>
+  );
+};
 
-export default App
+export default App;
+
